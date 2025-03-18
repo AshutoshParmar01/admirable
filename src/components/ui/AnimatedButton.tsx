@@ -1,11 +1,10 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface AnimatedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "primary";
-  size?: "default" | "sm" | "lg" | "icon" | "xl";
+  size?: "default" | "sm" | "lg" | "icon";
   children: React.ReactNode;
   className?: string;
   withArrow?: boolean;

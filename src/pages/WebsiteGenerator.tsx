@@ -8,9 +8,14 @@ import { Input } from "@/components/ui/input";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { Loader2 } from "lucide-react";
 import GeneratedWebsitePreview from "@/components/sections/GeneratedWebsitePreview";
+import { useToast } from "@/hooks/use-toast";
+
+const GEMINI_API_KEY = "AIzaSyAGRPEyAUzW2pZHfSxPJpM2V4MHfgrFvbc";
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
 
 const WebsiteGenerator = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [requirements, setRequirements] = useState("");
   const [projectName, setProjectName] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -20,6 +25,78 @@ const WebsiteGenerator = () => {
     structure: { fileName: string; content: string }[];
   }>(null);
 
+  const generateWebsite = async (projectName: string, requirements: string) => {
+    try {
+      const prompt = `Generate a website structure for a project named "${projectName}" with the following requirements: ${requirements}. 
+      
+      Please provide:
+      1. A React frontend code sample for the main App.jsx or App.tsx file
+      2. A Node.js backend code sample for the main server file
+      3. A file structure for the project
+
+      Format your response as JSON with three fields: 
+      - frontend (string with React code)
+      - backend (string with Node.js code)
+      - structure (array of objects with fileName and content fields)
+      
+      Only respond with valid JSON.`;
+
+      const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: prompt }
+              ]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 8192,
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Failed to generate website');
+      }
+
+      const data = await response.json();
+      
+      // Extract the text from the response
+      const textResponse = data.candidates[0].content.parts[0].text;
+      
+      // Find the JSON portion in the text
+      const jsonMatch = textResponse.match(/```json\n([\s\S]*?)\n```/) || 
+                        textResponse.match(/```\n([\s\S]*?)\n```/) || 
+                        textResponse.match(/{[\s\S]*}/);
+      
+      let jsonResponse;
+      if (jsonMatch) {
+        jsonResponse = JSON.parse(jsonMatch[1] || jsonMatch[0]);
+      } else {
+        // If no JSON formatting, try to parse the whole response
+        try {
+          jsonResponse = JSON.parse(textResponse);
+        } catch (e) {
+          throw new Error('Failed to parse Gemini response');
+        }
+      }
+
+      return jsonResponse;
+    } catch (error) {
+      console.error("Error calling Gemini API:", error);
+      throw error;
+    }
+  };
+
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!requirements.trim() || !projectName.trim()) return;
@@ -27,59 +104,20 @@ const WebsiteGenerator = () => {
     setIsGenerating(true);
     
     try {
-      // In a real implementation, this would be a call to the Gemini API
-      // For this demo, we'll simulate the API call with a timeout
-      setTimeout(() => {
-        const mockGeneratedCode = {
-          frontend: `import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import About from './pages/About';
-import Contact from './pages/Contact';
-
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
-
-export default App;`,
-          backend: `const express = require('express');
-const cors = require('cors');
-const app = express();
-const port = process.env.PORT || 5000;
-
-app.use(cors());
-app.use(express.json());
-
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello from the backend!' });
-});
-
-app.listen(port, () => {
-  console.log(\`Server running on port \${port}\`);
-});`,
-          structure: [
-            { fileName: "src/App.js", content: "// React App entry point" },
-            { fileName: "src/pages/Home.js", content: "// Home page component" },
-            { fileName: "src/pages/About.js", content: "// About page component" },
-            { fileName: "src/pages/Contact.js", content: "// Contact page component" },
-            { fileName: "server/index.js", content: "// Express server" },
-            { fileName: "package.json", content: "// Project dependencies" }
-          ]
-        };
-        
-        setGeneratedCode(mockGeneratedCode);
-        setIsGenerating(false);
-      }, 3000);
+      const generatedResult = await generateWebsite(projectName, requirements);
+      setGeneratedCode(generatedResult);
+      toast({
+        title: "Website generated successfully!",
+        description: `Your ${projectName} website structure is ready.`,
+      });
     } catch (error) {
       console.error("Error generating website:", error);
+      toast({
+        title: "Generation failed",
+        description: "An error occurred while generating your website.",
+        variant: "destructive",
+      });
+    } finally {
       setIsGenerating(false);
     }
   };
