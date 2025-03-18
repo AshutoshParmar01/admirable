@@ -1,8 +1,11 @@
 
 import React from "react";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { useNavigate } from "react-router-dom";
 
 const Hero: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="pt-28 md:pt-32 pb-16 md:pb-24 overflow-hidden relative">
       {/* Background elements */}
@@ -22,11 +25,17 @@ const Hero: React.FC = () => {
           </h1>
           
           <p className="text-lg md:text-xl text-slate-600 mb-8 max-w-2xl mx-auto opacity-0 animate-fade-in animation-delay-400">
-            Just describe what you need, and we'll build you a custom website that perfectly matches your vision. No coding required.
+            Just describe what you need, and we'll build you a custom React and Node.js website that perfectly matches your vision. No coding required.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 md:mb-16">
-            <AnimatedButton size="lg" variant="primary" withArrow delay={600}>
+            <AnimatedButton 
+              size="lg" 
+              variant="primary" 
+              withArrow 
+              delay={600}
+              onClick={() => navigate('/generator')}
+            >
               Get Started Free
             </AnimatedButton>
             <AnimatedButton size="lg" variant="outline" delay={800}>
@@ -50,9 +59,9 @@ const Hero: React.FC = () => {
                 <div className="max-w-md w-full">
                   <h3 className="text-2xl font-medium mb-4">Describe your website</h3>
                   <div className="w-full h-32 bg-slate-50 rounded-lg border border-slate-200 p-4 mb-4 text-left text-slate-500 text-sm">
-                    I want a professional photography portfolio website with a gallery, about page, contact form, and a modern minimal design...
+                    I want a professional e-commerce website with React frontend and Node.js backend, product listings, shopping cart, and user authentication...
                   </div>
-                  <AnimatedButton variant="primary" className="w-full">
+                  <AnimatedButton variant="primary" className="w-full" onClick={() => navigate('/generator')}>
                     Generate Website
                   </AnimatedButton>
                 </div>
