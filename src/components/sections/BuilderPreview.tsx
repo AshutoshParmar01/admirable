@@ -132,7 +132,7 @@ const BuilderPreview: React.FC = () => {
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
                 <div className="w-full max-w-md h-6 rounded-full bg-white border border-slate-200 flex items-center px-3">
-                  <span className="text-xs text-slate-400">siteforge.app/builder</span>
+                  <span className="text-xs text-slate-400">admirable.app/builder</span>
                 </div>
               </div>
 
