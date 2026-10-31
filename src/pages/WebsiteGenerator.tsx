@@ -10,8 +10,8 @@ import { Loader2 } from "lucide-react";
 import GeneratedWebsitePreview from "@/components/sections/GeneratedWebsitePreview";
 import { useToast } from "@/hooks/use-toast";
 
-const GEMINI_API_KEY = "AIzaSyAGRPEyAUzW2pZHfSxPJpM2V4MHfgrFvbc";
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const GEMINI_API_URL = import.meta.env.VITE_GEMINI_API_URL || "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
 
 const WebsiteGenerator = () => {
   const navigate = useNavigate();
@@ -26,6 +26,10 @@ const WebsiteGenerator = () => {
   }>(null);
 
   const generateWebsite = async (projectName: string, requirements: string) => {
+    if (!GEMINI_API_KEY) {
+      throw new Error("Gemini API key is not configured. Please set VITE_GEMINI_API_KEY in your .env file.");
+    }
+
     try {
       const prompt = `Generate a website structure for a project named "${projectName}" with the following requirements: ${requirements}. 
       
@@ -101,6 +105,15 @@ const WebsiteGenerator = () => {
     e.preventDefault();
     if (!requirements.trim() || !projectName.trim()) return;
 
+    if (!GEMINI_API_KEY) {
+      toast({
+        title: "API key missing",
+        description: "Please configure VITE_GEMINI_API_KEY in your .env file.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsGenerating(true);
     
     try {
@@ -110,11 +123,11 @@ const WebsiteGenerator = () => {
         title: "Website generated successfully!",
         description: `Your ${projectName} website structure is ready.`,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating website:", error);
       toast({
         title: "Generation failed",
-        description: "An error occurred while generating your website.",
+        description: error?.message || "An error occurred while generating your website.",
         variant: "destructive",
       });
     } finally {

@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
             <a href="#" className="flex items-center">
-              <span className="text-xl font-bold text-gradient">SiteForge</span>
+              <span className="text-xl font-bold text-gradient">Admirable</span>
             </a>
             <p className="mt-4 text-slate-600 text-sm">
               Creating beautiful websites tailored to your specific requirements, with no coding required.
@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
         
         <div className="border-t border-slate-200 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-slate-500">
-            &copy; {new Date().getFullYear()} SiteForge. All rights reserved.
+            &copy; {new Date().getFullYear()} Admirable. All rights reserved.
           </p>
           <div className="flex items-center space-x-4 mt-4 md:mt-0">
             <a href="#" className="text-slate-500 hover:text-primary transition-colors">

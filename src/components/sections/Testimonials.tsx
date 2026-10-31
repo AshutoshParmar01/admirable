@@ -11,7 +11,7 @@ const Testimonials: React.FC = () => {
       delay: 200
     },
     {
-      content: "As a photographer, I needed a portfolio that would showcase my work in the best light. SiteForge created exactly what I envisioned with minimal input.",
+      content: "As a photographer, I needed a portfolio that would showcase my work in the best light. Admirable created exactly what I envisioned with minimal input.",
       name: "Sarah Chen",
       role: "Professional Photographer",
       delay: 400

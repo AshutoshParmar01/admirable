@@ -24,7 +24,7 @@ const Header: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
         <a href="#" className="flex items-center">
-          <span className="text-xl md:text-2xl font-bold text-gradient">SiteForge</span>
+          <span className="text-xl md:text-2xl font-bold text-gradient">Admirable</span>
         </a>
 
         <nav className="hidden md:flex items-center space-x-8">

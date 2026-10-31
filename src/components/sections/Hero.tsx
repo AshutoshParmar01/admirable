@@ -52,7 +52,7 @@ const Hero: React.FC = () => {
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
                 <div className="w-full max-w-md mx-auto h-6 rounded-full bg-slate-100 flex items-center px-3">
-                  <span className="text-xs text-slate-400">https://siteforge.app</span>
+                  <span className="text-xs text-slate-400">https://admirable.app</span>
                 </div>
               </div>
               <div className="absolute inset-0 top-12 bg-white/80 backdrop-blur-sm p-8 flex items-center justify-center">
